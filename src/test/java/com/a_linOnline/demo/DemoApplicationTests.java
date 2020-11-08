@@ -3,8 +3,6 @@ package com.a_linOnline.demo;
 
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import com.a_linOnline.demo.bean.Person;
 import org.apache.catalina.core.ApplicationContext;
 
 import org.junit.runner.RunWith;
@@ -24,18 +22,6 @@ import org.junit.platform.commons.logging.LoggerFactory;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class DemoApplicationTests {
-//    @Autowired
-//    Person person;
-
-//    @Autowired
-//    ApplicationContext ioc;
-//
-//    @Test
-//    public void testHelloService() {
-//        boolean b = ioc.containsBean("helloService");
-//        System.out.println(b);
-//    }
-
 
 //    记录器
 //    Logger logger = LoggerFactory.getLogger(getClass());
