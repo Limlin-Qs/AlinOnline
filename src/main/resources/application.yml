@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: AlinOnline
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/alin_online?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: password
+#server:
+#  port: 8080
+
+---
+spring:
+  application:
+    name: AlinOnline
+  profiles: dev
+server:
+  port: 8083
+#debug: true
+#person:
+#  lastName: zhang${random.uuid}
+#  age: 18
+#  boss: false
+#  birth: 2017/12/12
+#  maps: {k1:v1,k2:12}
+#  lists:
+#    - list
+#    - zhaoliu
+#  dog:
+#    name: 小狗${person.hello:hello}_dog
+#    age: 2
+---
+server:
+  port: 8080
+spring:
+  profiles: prod # 指定属于哪个环境
+logging:
+  file:
+    path: /alin_online/logs

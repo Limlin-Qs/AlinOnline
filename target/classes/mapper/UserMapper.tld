@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--文档类型定义，简称DTD，用来验证当前的mapper(它是个XML文档)配置文件的有效性。-->
+<!--Taglib指令，其实就是定义一个标签库以及自定义标签的前缀。-->
+
+<mapper namespace="com.a_linOnline.demo.user.dao.UserDao">
+    <resultMap id="selectUserMap" type="com.a_linOnline.user.entity.UserInfo">
+        <result column="user_uuid" property="userUuid" jdbcType="VARCHAR"/>
+        <result column="user_account" property="userAccount" jdbcType="VARCHAR"/>
+        <result column="user_pwd" property="userPwd" jdbcType="VARCHAR"/>
+        <result column="user_limit" property="userLimit" jdbcType="INTEGER"/>
+        <result column="created_by" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="VARCHAR"/>
+        <result column="last_modified_by" property="lastModifiedBy" jdbcType="VARCHAR"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="VARCHAR"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="INTEGER"/>
+        <result column="sort_no" property="sortNo" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+    </resultMap>
+    <!--统计用户账号数量-->
+    <select id="countUserAcct" parameterType="com.a_linOnline.user.entity.UserInfo" resultType="int">
+        select count(user_account)
+        from t_user
+        where is_deleted = 0
+        and user_account = #{userAccount}
+        <if test="userUuid != null and userUuid != ''">
+            and user_uuid != #{userUuid}
+        </if>
+    </select>
+    <select id="countUser" parameterType="com.a_linOnline.user.entity.UserInfo" resultType="int">
+        select count(user_account)
+        from t_user
+        where is_deleted = 0
+    </select>
+    <!--新增用户-->
+    <insert id="saveUser" parameterType="com.a_linOnline.user.entity.UserInfo">
+        insert into t_user
+        (user_uuid,
+        user_account,
+        user_pwd,
+        user_limit,
+        created_by,
+        gmt_create,
+        last_modified_by,
+        gmt_modified,
+        is_deleted,
+        sort_no,
+        version
+        )
+        values
+        (#{userUuid},
+        #{userAccount},
+        #{userPwd},
+        0,
+        #{createdBy},
+        NOW(),
+        #{createdBy},
+        NOW(),
+        0,
+        0,
+        0
+        )
+    </insert>
+    <!--获取用户信息-->
+    <select id="listUsers" parameterType="com.a_linOnline.user.entity.UserInfo"
+            resultMap="selectUserMap">
+        select
+        user_uuid,
+        user_account,
+        user_pwd,
+        user_limit,
+        created_by,
+        gmt_create,
+        last_modified_by,
+        gmt_modified,
+        is_deleted,
+        sort_no,
+        version
+        from t_user
+        where
+        is_deleted = 0
+        order by gmt_create asc
+    </select>
+    <!--修改用户密码-->
+    <update id="updateUserPwd" parameterType="com.a_linOnline.user.entity.UserInfo">
+    update t_user
+        set
+            user_pwd = #{userPwd},
+            gmt_modified = now(),
+            last_modified_by = #{lastModifiedBy},
+            version = version + 1
+            where user_account = #{userAccount}
+    </update>
+    <!--id查询用户-->
+    <select id="getUserById" parameterType="java.lang.String" resultMap="selectUserMap">
+    select
+        user_uuid,
+        user_account,
+        user_pwd,
+        user_limit,
+        created_by,
+        gmt_create,
+        last_modified_by,
+        gmt_modified,
+        is_deleted,
+        sort_no,
+        user_limit,
+        version
+        from t_user
+        where user_account = #{userAccount}
+        and is_deleted = 0
+    </select>
+    <!--删除用户-->
+    <update id="deleteUser" parameterType="com.a_linOnline.user.entity.UserBatch">
+        update t_user
+        set is_deleted = 1,
+        gmt_modified = now(),
+        last_modified_by = #{lastModifiedBy},
+        version = version + 1
+        where user_account in
+        <foreach item="item" index="index" collection="userList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>
